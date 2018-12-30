@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {{ title }}
+    </title>
+    {% include 'base_meta.html' %}
+    {% include 'base_css.html' %}
+    {% block custom_css %}
+        {% comment %} For page specific CSS {% endcomment %}
+     {% endblock %}
+</head>
+<body>
+    {% include 'nav.html' %}
+
+    {% block body %}
+        {% comment %} The content of different templates will be shown here {% endcomment %}
+    {% endblock %}
+
+    {% include 'base_footer.html' %}
+</body>
+{% include 'base_scripts.html' %}  {% comment %} All the Scripts can be loaded from the ones specified in 'base_scripts.html' file {% endcomment %}
+
+{% block custom_script %}
+    {% comment %} For page specific javaScript {% endcomment %}
+{% endblock %}
+
+</html>
