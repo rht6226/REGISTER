@@ -37,9 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'USER_MODULE.apps.UserModuleConfig',
-    'ATTENDANCE_MODULE.apps.AttendanceModuleConfig',
+    'crispy_forms',
+    'USER_MODULE',
+    'ATTENDANCE_MODULE',
 ]
+
+# Custom User Model
+AUTHENTICATION_BACKENDS = (
+    'USER_MODULE.auth.StudentOrFaculty',
+)
+AUTH_USER_MODEL = 'USER_MODULE.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -131,3 +138,6 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# crispy Forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
