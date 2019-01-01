@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib.auth import authenticate, login, logout
 from django.utils.html import strip_tags
-from .forms import StudentForm
+from .forms import StudentForm, FacultyForm
 
 
 class LoginView(View):
@@ -28,12 +28,27 @@ class LoginView(View):
             return render(req, 'authentication.html', context=context)
 
 
-class RegistrationView(View):
+class SelectUserView(View):
+
+    def get(self, req):
+        context = {'title': 'Sign Up'}
+        return render(req, 'registration.html', context=context)
+
+
+class StudentRegistrationView(View):
 
     def get(self, req):
         student_form = StudentForm()
         context = {'title': 'Register | Signup', 'form': student_form, 'user_type': 'Student'}
-        return render(req, 'registration.html', context=context)
+        return render(req, 'student_registration.html', context=context)
+
+
+class FacultyRegistrationView(View):
+
+    def get(self, req):
+        faculty_form = FacultyForm()
+        context = {'title': 'Register | Signup', 'form': faculty_form, 'user_type': 'Faculty'}
+        return render(req, 'faculty_registration.html', context=context)
 
 
 def logout_user(req):

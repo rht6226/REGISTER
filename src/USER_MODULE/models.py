@@ -71,7 +71,7 @@ class Student(User):
     # During Registration
     registration_number = models.CharField(max_length=8, unique=True, blank=False)
     branch = models.CharField(max_length=3, blank=False, choices=BRANCH, default='ECE')
-    year = models.PositiveIntegerField(max_length=1, blank=False, choices=YEAR, default=1)
+    year = models.PositiveSmallIntegerField(blank=False, choices=YEAR, default=1)
 
     # After Registration
     father = models.CharField(max_length=70, default='', blank=True)
@@ -106,7 +106,7 @@ class Faculty(User):
     # During Registration
     id_number = models.CharField(max_length=10, unique=True, blank=False)
     post = models.CharField(max_length=40, blank=True, default='')
-    department = models.CharField(max_length=5, choices=DEPARTMENT)
+    department = models.CharField(max_length=5, choices=DEPARTMENT, default='ECED')
 
     class Meta:
         verbose_name = 'Faculty'

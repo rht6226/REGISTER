@@ -27,11 +27,16 @@ class StudentForm(forms.ModelForm):
 
 
 class FacultyForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
+
     class Meta:
         model = Faculty
         fields = (
             'first_name',
             'last_name',
+            'password',
+            'confirm_password',
             'email',
             'id_number',
             'post',
@@ -39,11 +44,7 @@ class FacultyForm(forms.ModelForm):
             'gender',
         )
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control col-3 display-inline'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control col-3 display-inline'}),
-            'email': forms.TextInput(attrs={'class': 'form-control col-3'}),
-            'id_number': forms.TextInput(attrs={'class': 'form-control col-3'}),
-            'department': forms.Select(attrs={'class': 'form-control col-3'}),
-            'gender': forms.Select(attrs={'class': 'form-control col-3'})
+            'department': forms.Select(attrs={'class': 'form-control'}),
+            'gender': forms.Select(attrs={'class': 'form-control'})
         }
 
