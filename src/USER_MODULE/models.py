@@ -1,9 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from .managers import SiteUserManager
 
 
-class User(AbstractUser):
+class SiteUser(AbstractBaseUser):
 
+    # Choices
     GENDER = (
         ('m', 'male'),
         ('f', 'female'),
@@ -12,32 +14,32 @@ class User(AbstractUser):
 
     TYPE = (
         ('s', 'student'),
-        ('f', 'faculty')
+        ('f', 'faculty'),
     )
 
-    # Required
+    # Information Fields
+    user_id = models.CharField(max_length=15, unique=True)
+    email = models.EmailField(max_length=50, unique=True)
+    first_name = models.CharField(max_length=100, blank=False, default='')
+    last_name = models.CharField(max_length=100, blank=False, default='')
+
     type = models.CharField(max_length=1, choices=TYPE, blank=True, default='s')
 
-    # optional
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+
     middle_name = models.CharField(max_length=30, default='', blank=True)
     gender = models.CharField(max_length=1, choices=GENDER, default='c')
     date_of_birth = models.DateField(blank=True, default='1998-11-01')
     profile_image = models.ImageField(upload_to='user/', blank=True)
 
-    def get_full_name(self):
-        # get the full name of the user
-        return self.first_name + ' ' + self.middle_name + ' ' + self.last_name
+    # AbstractBaseUser settings
+    USERNAME_FIELD = 'user_id'
+    REQUIRED_FIELDS = ['email', 'type']
 
-    def __str__(self):
-        return self.username + ' | ' + self.get_full_name()
+    objects = SiteUserManager()
 
-    @property
-    def image_url(self):
-        if self.profile_image:
-            return self.profile_image.url
-        else:
-            return r"/static/add_user.png"
-
+    # Metadata
     class Meta:
         default_permissions = ()
         permissions = (
@@ -46,70 +48,42 @@ class User(AbstractUser):
             ("delete_user", "delete user"),
             ("view_user", "view user"),
         )
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+
+    # Methods
+    def get_full_name(self):
+        # get the full name of the user
+        return self.first_name + ' ' + self.middle_name + ' ' + self.last_name
+
+    def __str__(self):
+        return self.user_id + ' | ' + self.get_full_name()
+
+    @property
+    def image_url(self):
+        if self.profile_image:
+            return self.profile_image.url
+        else:
+            return r"/static/add_user.png"
+
+    # Permissions
+    @property
+    def is_staff(self):
+        """
+        Is the user a member of the staff ?
+        :return:
+        """
+        return self.is_admin
+
+    def has_perm(self, perm, obj=None):
+        return self.is_admin
+
+    def has_module_perms(self, app_label):
+        return self.is_admin
 
 
-class Student(User):
-
-    BRANCH = (
-        ('CSE', 'Computer Science and Engineering'),
-        ('ECE', 'Electronics and Communications Engineering'),
-        ('IT', 'Information Technology'),
-        ('ME', 'Mechanical Engineering'),
-        ('CE', 'Civil Engineering'),
-        ('CHE', 'Chemical Engineering'),
-        ('PIE', 'Production and Industrial Engineering'),
-        ('BT', 'Biotechnology'),
-    )
-
-    YEAR = (
-        (1, 'First Year'),
-        (2, 'Second Year'),
-        (3, 'Third Year'),
-        (4, 'Final Year')
-    )
-
-    # During Registration
-    registration_number = models.CharField(max_length=8, unique=True, blank=False)
-    branch = models.CharField(max_length=3, blank=False, choices=BRANCH, default='ECE')
-    year = models.PositiveSmallIntegerField(blank=False, choices=YEAR, default=1)
-
-    # After Registration
-    father = models.CharField(max_length=70, default='', blank=True)
-    mother = models.CharField(max_length=70, default='', blank=True)
-
-    address = models.CharField(max_length=150, blank=True, default='')
-    street = models.CharField(max_length=75, blank=True, default='')
-    landmark = models.CharField(max_length=75, blank=True, default='')
-    zip = models.CharField(max_length=15, blank=True, default='')
-    state = models.CharField(max_length=40, blank=True, default='')
-    country = models.CharField(max_length=40, blank=True, default='')
-
-    class Meta:
-        verbose_name = 'Student'
-        verbose_name_plural = 'Students'
 
 
-class Faculty(User):
 
-    DEPARTMENT = (
-        ('CSED', 'Computer Science and Engineering Department'),
-        ('ECED', 'Electronics and Communications Engineering Department'),
-        ('MED', 'Mechanical Engineering Department'),
-        ('CED', 'Civil Engineering Department'),
-        ('CHD', 'Chemistry Department'),
-        ('MD', 'Mathematics Department'),
-        ('PD', 'Physics Department'),
-        ('BTD', 'Biotechnology Department'),
-        ('AMD', 'Applied Mechanics Department'),
-    )
-
-    # During Registration
-    id_number = models.CharField(max_length=10, unique=True, blank=False)
-    post = models.CharField(max_length=40, blank=True, default='')
-    department = models.CharField(max_length=5, choices=DEPARTMENT, default='ECED')
-
-    class Meta:
-        verbose_name = 'Faculty'
-        verbose_name_plural = 'Faculties'
 
 

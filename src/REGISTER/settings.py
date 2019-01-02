@@ -31,22 +31,26 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'crispy_forms',
+    'USER_MODULE',
+    'ATTENDANCE_MODULE',
+
+    # pre-installed apps
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms',
-    'USER_MODULE',
-    'ATTENDANCE_MODULE',
 ]
 
 # Custom User Model
-AUTHENTICATION_BACKENDS = (
-    'USER_MODULE.auth.StudentOrFaculty',
-)
-AUTH_USER_MODEL = 'USER_MODULE.User'
+# AUTHENTICATION_BACKENDS = (
+#     'USER_MODULE.auth.StudentOrFaculty',
+# )
+
+AUTH_USER_MODEL = 'USER_MODULE.SiteUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
